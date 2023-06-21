@@ -1,0 +1,31 @@
+﻿  Snakebot2.0.cpp
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(26,53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(28,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(32,53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(34,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(38,53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(40,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(44,53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(46,67): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(53,60): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(54,60): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(87,23): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(92,20): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(93,21): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(118,62): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(122,77): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(128,62): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(132,77): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(138,62): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(142,77): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(148,62): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(152,77): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(206,75): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(236,60): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(237,60): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(262,60): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(263,60): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(275,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(280,56): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\Snakebot2.0\Snakebot2.0.cpp(281,56): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Snakebot2.0.vcxproj -> C:\Users\mikae\OneDrive\Tiedostot\Coding\C++\Snakebot2.0\x64\Debug\Snakebot2.0.exe
