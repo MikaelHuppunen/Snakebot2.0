@@ -23,6 +23,7 @@ float fitness[gensize];
 int exitpoint;
 string file_path1 = "weights.txt";
 string file_path2 = "biases.txt";
+double timer2 = 0.0;
 
 void randomize(int a) {
     fitness[a] = 0;
@@ -113,18 +114,36 @@ void selection() {
                 &bias[10 * i + 2 * ii + 1][0][0]);
             copy(&parentbias[10 * i + 2 * ii][0][0] + jjj + 1, &parentbias[10 * i + 2 * ii][0][0] + 100,
                 &bias[10 * i + 2 * ii + 1][0][0] + jjj + 1);
-            
         }
     }
+    auto start = chrono::high_resolution_clock::now();
     for (int i = 1; i < gensize; i++) {
-        for (int ii = 0; ii < 32; ii++) {
-            if ((rand() / double(RAND_MAX)) * mutationrate < 1.0) {
-                bias[i][0][ii] = (rand() / double(RAND_MAX)) - 0.5;
+        //n mutations happens if chance of n mutations > (rand() / double(RAND_MAX)
+        //Since RAND_MAX = 32767, if probability of n mutations is less than 1/32767, we ignore those possibilities
+        double rand1 = (rand() / double(RAND_MAX));
+        int mutations1 = int(rand1 < 0.0314) + int(rand1 < 0.000493);
+        int previousindex1 = -1;
+        for(int ii = 0; ii < mutations1; ii++){
+            int index = static_cast<int>((rand() / (double(RAND_MAX)+0.1)))*(32-ii);
+            if(index >= previousindex1){
+                index++;
             }
-            for (int iii = 0; iii < 518; iii++) {
-                if ((rand() / double(RAND_MAX)) * mutationrate < 1.0) {
-                    multiplier[i][0][ii][iii] = (rand() / double(RAND_MAX)) - 0.5;
+            bias[i][0][index] = (rand() / double(RAND_MAX)) - 0.5;
+            previousindex1 = index;
+        }
+        for (int ii = 0; ii < 32; ii++) {
+            double rand2 = (rand() / double(RAND_MAX));
+            int mutations2 = int(rand2 < 0.311) + int(rand2 < 0.0813) + int(rand2 < 0.0142) + int(rand2 < 0.00185) + int(rand2 < 0.000193);
+            int previousindex2[5] = {-1, -1, -1, -1, -1};
+            for(int iii = 0; iii < mutations2; iii++){
+                int index = static_cast<int>((rand() / (double(RAND_MAX)+0.1)))*(518-iii);
+                for(int iv = 0; iv < iii; iv++){
+                    if(index >= previousindex2[iv]){
+                        index++;
+                    }
                 }
+                multiplier[i][0][ii][index] = (rand() / double(RAND_MAX)) - 0.5;
+                previousindex2[iii] = index;
             }
         }
         for (int ii = 0; ii < 16; ii++) {
@@ -158,6 +177,9 @@ void selection() {
             }
         }
     }
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+    timer2 += duration.count();
     copy(&bestmultiplier[0][0][0], &bestmultiplier[0][0][0] + 51290, &multiplier[0][0][0][0]);
     copy(&bestbias[0][0], &bestbias[0][0] + 100, &bias[0][0][0]);
 }
@@ -300,7 +322,7 @@ int main(){
             fitness[j] = 0;
         }
         for (int i = 0; i < tries; i++) {
-            for (; att < gensize;) {
+            while(att < gensize){
                 timer++;
                 ai();
                 move();
@@ -411,6 +433,7 @@ int main(){
     auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
     cout << duration.count() << "s";
     cout << '\n';
+    std::cout << timer2/1000000.0 << "s" << '\n';
     cout << fitness[0]/tries;
     return 0;
 }
