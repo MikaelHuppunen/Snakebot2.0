@@ -6,8 +6,10 @@
 #include <cstdlib>
 #include <time.h>
 #include <chrono>
+#include <string>
+#include <fstream>
 using namespace std;
-int amount;
+int generations;
 float multiplier[200][4][32][518], parentmultiplier[200][4][32][518];
 float bias[200][4][32], parentbias[200][4][32];
 float value[5][518];
@@ -19,6 +21,8 @@ int snakex[255];
 int snakey[255];
 float fitness[gensize];
 int exitpoint;
+string file_path1 = "weights.txt";
+string file_path2 = "biases.txt";
 
 void randomize(int a) {
     fitness[a] = 0;
@@ -270,8 +274,7 @@ void move() {
     }
 }
 
-int main()
-{
+int main(){
     srand(time(0));
     food();
     foodx = foodxp[0];
@@ -285,14 +288,14 @@ int main()
     for (int i = 0; i < 510; i++) {
         value[0][i] = 0;
     }
-    cin >> amount; 
+    cin >> generations; 
     auto start = chrono::high_resolution_clock::now();
     snakex[0] = x;
     snakey[0] = y;
     for (int i = 0; i < gensize; i++) {
         randomize(i);
     }
-    for (int ii = 0; ii < amount; ii++) {
+    for (int ii = 0; ii < generations; ii++) {
         for (int j = 0; j < gensize; j++) {
             fitness[j] = 0;
         }
@@ -308,112 +311,106 @@ int main()
         cout << *(max_element(begin(fitness), end(fitness)))/tries << '\n';
         selection();
     }
-    //print arrays
-    if (0 == 0) {
-        cout << "[[";
-        for (int i = 0; i < 32; i++) {
-            cout << '[';
-            for (int ii = 0; ii < 518; ii++) {
-                cout << multiplier[0][0][i][ii];
-                if (ii < 517) {
-                    cout << ',';
-                }
-            }
-            cout << ']';
-            if (i < 31) {
-                cout << ',';
+    //save arrays
+    string weight_string = "";
+    weight_string += "[[";
+    for (int i = 0; i < 32; i++) {
+        weight_string += '[';
+        for (int ii = 0; ii < 518; ii++) {
+            weight_string += to_string(multiplier[0][0][i][ii]);
+            if (ii < 517) {
+                weight_string += ',';
             }
         }
-        cout << "],[";
-        for (int i = 0; i < 16; i++) {
-            cout << '[';
-            for (int ii = 0; ii < 32; ii++) {
-                cout << multiplier[0][1][i][ii];
-                if (ii < 31) {
-                    cout << ',';
-                }
-            }
-            cout << ']';
-            if (i < 15) {
-                cout << ',';
-            }
+        weight_string += ']';
+        if (i < 31) {
+            weight_string += ',';
         }
-        cout << "],[";
-        for (int i = 0; i < 8; i++) {
-            cout << '[';
-            for (int ii = 0; ii < 16; ii++) {
-                cout << multiplier[0][2][i][ii];
-                if (ii < 15) {
-                    cout << ',';
-                }
-            }
-            cout << ']';
-            if (i < 7) {
-                cout << ',';
-            }
-        }
-        cout << "],[";
-        for (int i = 0; i < 4; i++) {
-            cout << '[';
-            for (int ii = 0; ii < 8; ii++) {
-                cout << multiplier[0][3][i][ii];
-                if (ii < 7) {
-                    cout << ',';
-                }
-            }
-            cout << ']';
-            if (i < 3) {
-                cout << ',';
-            }
-        }
-        cout << "]]";
-        cout << '\n';
-        cout << "[[";
-        for (int i = 0; i < 32; i++) {
-            cout << bias[0][0][i];
-            if (i < 31) {
-                cout << ',';
-            }
-        }
-        cout << "],[";
-        for (int i = 0; i < 16; i++) {
-            cout << bias[0][1][i];
-            if (i < 15) {
-                cout << ',';
-            }
-        }
-        cout << "],[";
-        for (int i = 0; i < 8; i++) {
-            cout << bias[0][2][i];
-            if (i < 7) {
-                cout << ',';
-            }
-        }
-        cout << "],[";
-        for (int i = 0; i < 4; i++) {
-            cout << bias[0][3][i];
-            if (i < 3) {
-                cout << ',';
-            }
-        }
-        cout << "]]";
-        cout << '\n';
     }
+    weight_string += "],[";
+    for (int i = 0; i < 16; i++) {
+        weight_string += '[';
+        for (int ii = 0; ii < 32; ii++) {
+            weight_string += to_string(multiplier[0][1][i][ii]);
+            if (ii < 31) {
+                weight_string += ',';
+            }
+        }
+        weight_string += ']';
+        if (i < 15) {
+            weight_string += ',';
+        }
+    }
+    weight_string += "],[";
+    for (int i = 0; i < 8; i++) {
+        weight_string += '[';
+        for (int ii = 0; ii < 16; ii++) {
+            weight_string += to_string(multiplier[0][2][i][ii]);
+            if (ii < 15) {
+                weight_string += ',';
+            }
+        }
+        weight_string += ']';
+        if (i < 7) {
+            weight_string += ',';
+        }
+    }
+    weight_string += "],[";
+    for (int i = 0; i < 4; i++) {
+        weight_string += '[';
+        for (int ii = 0; ii < 8; ii++) {
+            weight_string += to_string(multiplier[0][3][i][ii]);
+            if (ii < 7) {
+                weight_string += ',';
+            }
+        }
+        weight_string += ']';
+        if (i < 3) {
+            weight_string += ',';
+        }
+    }
+    weight_string += "]]";
+    std::ofstream outputFile(file_path1);
+    outputFile << weight_string;
+    outputFile.close();
+    
+    string bias_string = "";
+    bias_string += "[[";
+    for (int i = 0; i < 32; i++) {
+        bias_string += to_string(bias[0][0][i]);
+        if (i < 31) {
+            bias_string += ',';
+        }
+    }
+    bias_string += "],[";
+    for (int i = 0; i < 16; i++) {
+        bias_string += to_string(bias[0][1][i]);
+        if (i < 15) {
+            bias_string += ',';
+        }
+    }
+    bias_string += "],[";
+    for (int i = 0; i < 8; i++) {
+        bias_string += to_string(bias[0][2][i]);
+        if (i < 7) {
+            bias_string += ',';
+        }
+    }
+    bias_string += "],[";
+    for (int i = 0; i < 4; i++) {
+        bias_string += to_string(bias[0][3][i]);
+        if (i < 3) {
+            bias_string += ',';
+        }
+    }
+    bias_string += "]]";
+    std::ofstream outputFile2(file_path2);
+    outputFile2 << bias_string;
+    outputFile2.close();
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
-    cout << duration.count();
+    cout << duration.count() << "s";
     cout << '\n';
     cout << fitness[0]/tries;
-    cin >> exitpoint;
+    return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
