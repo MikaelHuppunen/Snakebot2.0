@@ -8,6 +8,7 @@
 #include <chrono>
 #include <string>
 #include <fstream>
+#include <cmath>
 using namespace std;
 int generations;
 float multiplier[200][4][32][518], parentmultiplier[200][4][32][518];
@@ -15,6 +16,7 @@ float bias[200][4][32], parentbias[200][4][32];
 float value[5][518];
 int x = 9, y = 7, att = 0, d = 0, foodxp[260], foodyp[260], foodx, foody, aid = 0, score = 0, 
 timer = 0, dmin = 15, dstart, gen = 0, tries = 5, highscore = 0, mutationrate = 988;
+double mutation_probabilities1[2], mutation_probabilities2[5];
 float totalfit, top;
 const int gensize = 200;
 int snakex[255];
@@ -51,6 +53,19 @@ void randomize(int a) {
             multiplier[a][3][i][ii] = (rand() / double(RAND_MAX)) - 0.5;
         }
     }
+}
+
+int factorial(int number){
+    int result = 1;
+    for(int i = 2; i <= number; i++){
+        result *= i;
+    }
+    return result;
+}
+
+double mutation_probability(int n, int index){
+    return pow(1.0/static_cast<double>(mutationrate),static_cast<double>(index))*pow(1.0-1.0/static_cast<double>(mutationrate)
+    ,static_cast<double>(n-1))*static_cast<double>(factorial(n))/(static_cast<double>(factorial(index))*(static_cast<double>(factorial(n-index))));
 }
 
 void food() {
@@ -116,11 +131,12 @@ void selection() {
                 &bias[10 * i + 2 * ii + 1][0][0] + jjj + 1);
         }
     }
+
     for (int i = 1; i < gensize; i++) {
         //n mutations happens if chance of n mutations > (rand() / double(RAND_MAX)
         //Since RAND_MAX = 32767, if probability of n mutations is less than 1/32767, we ignore those possibilities
         double rand1 = (rand() / double(RAND_MAX));
-        int mutations1 = int(rand1 < 0.0314) + int(rand1 < 0.000493);
+        int mutations1 = int(rand1 < mutation_probabilities1[0]) + int(rand1 < mutation_probabilities1[1]);
         int previousindex1 = -1;
         for(int ii = 0; ii < mutations1; ii++){
             int index = static_cast<int>((rand() / (double(RAND_MAX)+0.1)))*(32-ii);
@@ -132,7 +148,8 @@ void selection() {
         }
         for (int ii = 0; ii < 32; ii++) {
             double rand2 = (rand() / double(RAND_MAX));
-            int mutations2 = int(rand2 < 0.311) + int(rand2 < 0.0813) + int(rand2 < 0.0142) + int(rand2 < 0.00185) + int(rand2 < 0.000193);
+            int mutations2 = int(rand2 < mutation_probabilities2[0]) + int(rand2 < mutation_probabilities2[1]) 
+                + int(rand2 < mutation_probabilities2[2]) + int(rand2 < mutation_probabilities2[3]) + int(rand2 < mutation_probabilities2[4]);
             int previousindex2[5] = {-1, -1, -1, -1, -1};
             for(int iii = 0; iii < mutations2; iii++){
                 int index = static_cast<int>((rand() / (double(RAND_MAX)+0.1)))*(518-iii);
@@ -277,6 +294,13 @@ void move() {
         if (score > highscore) {
             highscore = score;
             mutationrate = 988 + 64 * highscore;
+            mutation_probabilities1[0] = mutation_probability(32,1);
+            mutation_probabilities1[1] = mutation_probability(32,2);
+            mutation_probabilities2[0] = mutation_probability(518,1);
+            mutation_probabilities2[1] = mutation_probability(518,2);
+            mutation_probabilities2[2] = mutation_probability(518,3);
+            mutation_probabilities2[3] = mutation_probability(518,4);
+            mutation_probabilities2[4] = mutation_probability(588,5);
         }
         score = 0;
         d = 0;
@@ -286,7 +310,7 @@ void move() {
         snakey[0] = y;
         foodx = foodxp[0];
         foody = foodyp[0];
-        for (; (foodx == x && foody == y);) {
+        while(foodx == x && foody == y){
             foodx = (rand() / (double(RAND_MAX) + 1)) * 17 + 1;
             foody = (rand() / (double(RAND_MAX) + 1)) * 15 + 1;
         }
@@ -299,6 +323,13 @@ void move() {
 }
 
 int main(){
+    mutation_probabilities1[0] = mutation_probability(32,1);
+    mutation_probabilities1[1] = mutation_probability(32,2);
+    mutation_probabilities2[0] = mutation_probability(518,1);
+    mutation_probabilities2[1] = mutation_probability(518,2);
+    mutation_probabilities2[2] = mutation_probability(518,3);
+    mutation_probabilities2[3] = mutation_probability(518,4);
+    mutation_probabilities2[4] = mutation_probability(588,5);
     srand(time(0));
     food();
     foodx = foodxp[0];
@@ -326,13 +357,20 @@ int main(){
         for (int i = 0; i < tries; i++) {
             while(att < gensize){
                 timer++;
+                auto start = chrono::high_resolution_clock::now();
                 ai(att);
                 move();
+                auto stop = chrono::high_resolution_clock::now();
+                auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+                timer2 += duration.count();
             }
             att = 0;
             food();
         }
-        cout << *(max_element(begin(fitness), end(fitness)))/tries << '\n';
+        if(ii%2 == 0){
+            cout << *(max_element(begin(fitness), end(fitness)))/tries << '\n';
+            cout << (100.0*ii)/generations << "%\n";
+        }
         selection();
     }
     //save arrays
