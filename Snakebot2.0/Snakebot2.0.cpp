@@ -216,15 +216,17 @@ void ai(int attempt){
             value[1][i] += value[0][ii] * multiplier[attempt][0][i][ii]
                 + value[0][ii+255] * multiplier[attempt][0][i][ii+255];
         }
-        for (int ii = 510; ii < 518; ii++) {
-            value[1][i] += value[0][ii] * multiplier[attempt][0][i][ii];
+        for (int ii = 510; ii < 518; ii+=2) {
+            //loop unrolling for optimization
+            value[1][i] += value[0][ii] * multiplier[attempt][0][i][ii] + value[0][ii+1] * multiplier[attempt][0][i][ii+1];
         }
         value[1][i] *= (value[1][i] > 0);
     }
     for (int i = 0; i < 16; i++) {
         value[2][i] = bias[attempt][1][i];
-        for (int ii = 0; ii < 32; ii++) {
-            value[2][i] += value[1][ii] * multiplier[attempt][1][i][ii];
+        for (int ii = 0; ii < 32; ii+=2) {
+            //loop unrolling for optimization
+            value[2][i] += value[1][ii] * multiplier[attempt][1][i][ii] + value[1][ii+1] * multiplier[attempt][1][i][ii+1];
         }
         value[2][i] *= (value[2][i] > 0);
     }
@@ -322,58 +324,7 @@ void move() {
     }
 }
 
-int main(){
-    mutation_probabilities1[0] = mutation_probability(32,1);
-    mutation_probabilities1[1] = mutation_probability(32,2);
-    mutation_probabilities2[0] = mutation_probability(518,1);
-    mutation_probabilities2[1] = mutation_probability(518,2);
-    mutation_probabilities2[2] = mutation_probability(518,3);
-    mutation_probabilities2[3] = mutation_probability(518,4);
-    mutation_probabilities2[4] = mutation_probability(588,5);
-    srand(time(0));
-    food();
-    foodx = foodxp[0];
-    foody = foodyp[0];
-    for (;(foodx == x && foody == y);) {
-        foodx = (rand() / (double(RAND_MAX) + 1)) * 17 + 1;
-        foody = (rand() / (double(RAND_MAX) + 1)) * 15 + 1;
-    }
-    dstart = abs(x - foodx) + abs(y - foody);
-    dmin = dstart;
-    for (int i = 0; i < 510; i++) {
-        value[0][i] = 0;
-    }
-    cin >> generations; 
-    auto start = chrono::high_resolution_clock::now();
-    snakex[0] = x;
-    snakey[0] = y;
-    for (int i = 0; i < gensize; i++) {
-        randomize(i);
-    }
-    for (int ii = 0; ii < generations; ii++) {
-        for (int j = 0; j < gensize; j++) {
-            fitness[j] = 0;
-        }
-        for (int i = 0; i < tries; i++) {
-            while(att < gensize){
-                timer++;
-                auto start = chrono::high_resolution_clock::now();
-                ai(att);
-                move();
-                auto stop = chrono::high_resolution_clock::now();
-                auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-                timer2 += duration.count();
-            }
-            att = 0;
-            food();
-        }
-        if(ii%2 == 0){
-            cout << *(max_element(begin(fitness), end(fitness)))/tries << '\n';
-            cout << (100.0*ii)/generations << "%\n";
-        }
-        selection();
-    }
-    //save arrays
+void save_arrays(){
     string weight_string = "";
     weight_string += "[[";
     for (int i = 0; i < 32; i++) {
@@ -469,11 +420,61 @@ int main(){
     std::ofstream outputFile2(file_path2);
     outputFile2 << bias_string;
     outputFile2.close();
+}
+
+int main(){
+    mutation_probabilities1[0] = mutation_probability(32,1);
+    mutation_probabilities1[1] = mutation_probability(32,2);
+    mutation_probabilities2[0] = mutation_probability(518,1);
+    mutation_probabilities2[1] = mutation_probability(518,2);
+    mutation_probabilities2[2] = mutation_probability(518,3);
+    mutation_probabilities2[3] = mutation_probability(518,4);
+    mutation_probabilities2[4] = mutation_probability(588,5);
+    srand(time(0));
+    food();
+    foodx = foodxp[0];
+    foody = foodyp[0];
+    for (;(foodx == x && foody == y);) {
+        foodx = (rand() / (double(RAND_MAX) + 1)) * 17 + 1;
+        foody = (rand() / (double(RAND_MAX) + 1)) * 15 + 1;
+    }
+    dstart = abs(x - foodx) + abs(y - foody);
+    dmin = dstart;
+    for (int i = 0; i < 510; i++) {
+        value[0][i] = 0;
+    }
+    cin >> generations; 
+    auto start = chrono::high_resolution_clock::now();
+    snakex[0] = x;
+    snakey[0] = y;
+    for (int i = 0; i < gensize; i++) {
+        randomize(i);
+    }
+    for (int ii = 0; ii < generations; ii++) {
+        for (int j = 0; j < gensize; j++) {
+            fitness[j] = 0;
+        }
+        for (int i = 0; i < tries; i++) {
+            while(att < gensize){
+                timer++;
+                ai(att);
+                move();
+            }
+            att = 0;
+            food();
+        }
+        if(ii%2 == 0){
+            cout << *(max_element(begin(fitness), end(fitness)))/tries << '\n';
+            cout << (100.0*ii)/generations << "%\n";
+        }
+        selection();
+    }
+    save_arrays();
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
     cout << duration.count() << "s";
     cout << '\n';
-    std::cout << timer2/1000000.0 << "s" << '\n';
+    std::cout << timer2/1000000000.0 << "s" << '\n';
     cout << fitness[0]/tries;
     return 0;
 }
